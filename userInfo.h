@@ -5,14 +5,17 @@ struct User
 {
 public:
     std::string name;
-    double balance;
+    int balance;
 
-    User();
-    User(const std::string &name, const double &balance);
-    void UpdateBalance(const int &balance);
+    User(void);
+    User(const std::string &name, const int &balance, const size_t &hash);
+    bool UpdateBalance(const int &balance, const char &type);
+    bool cancelAccount(void);
 
 private:
-    bool saveChanges(int balance);
+    void setHash(const size_t &hash);
+    bool saveChanges(void);
+    size_t hash;
 };
 
 #endif

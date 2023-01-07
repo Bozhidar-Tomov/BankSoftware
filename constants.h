@@ -3,11 +3,11 @@
 
 namespace constantsInit
 {
-    constexpr char Login{'L'};
-    constexpr char Register{'R'};
-    constexpr char Quit{'Q'};
-    constexpr char Yes{'y'};
-    constexpr char allowedSpecialCharacters[8] = {'!', '@', '#', '$', '%', '^', '&', '*'};
+    constexpr char LOGIN{'L'};
+    constexpr char REGISTER{'R'};
+    constexpr char QUIT{'Q'};
+    constexpr char YES{'y'};
+    constexpr char ALLOWED_SPECIAL_CHARS[8] = {'!', '@', '#', '$', '%', '^', '&', '*'};
     constexpr char FILE_NAME[10] = {
         'u',
         's',
@@ -25,12 +25,13 @@ namespace constantsInit
 
 namespace constantsAccount
 {
-    constexpr char Cancel{'C'};
-    constexpr char Deposit{'D'};
-    constexpr char Logout{'L'};
-    constexpr char Transfer{'T'};
-    constexpr char Withdraw{'W'};
+    constexpr char CANCEL{'C'};
+    constexpr char DEPOSIT{'D'};
+    constexpr char LOGOUT{'L'};
+    constexpr char TRANSFER{'T'};
+    constexpr char WITHDRAW{'W'};
     constexpr double ROUND_PRECISION{100.0};
+    constexpr int OVERDRAFT_LIMIT{1000000};
 }
 
 #endif
