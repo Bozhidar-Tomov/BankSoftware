@@ -5,11 +5,11 @@ struct User
 {
 public:
     std::string name;
-    int balance;
+    long balance;
 
     User(void);
-    User(const std::string &name, const int &balance, const size_t &hash);
-    bool UpdateBalance(const int &balance, const char &type);
+    User(const std::string &name, const long &balance, const size_t &hash);
+    bool UpdateBalance(const long &balance, const char &type);
     bool cancelAccount(void);
 
 private:

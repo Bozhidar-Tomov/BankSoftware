@@ -32,6 +32,7 @@ namespace constantsAccount
     constexpr char WITHDRAW{'W'};
     constexpr double ROUND_PRECISION{100.0};
     constexpr int OVERDRAFT_LIMIT{1000000};
+    constexpr size_t MAX_BALANCE{100000000000}; // 1 billion currency units (whole base BGN)
 }
 
 #endif

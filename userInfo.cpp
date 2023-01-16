@@ -5,28 +5,37 @@ User::User(void)
 {
     this->name = "";
     this->balance = -1;
+    setHash(-1);
 }
 
-User::User(const std::string &name, const int &balance, const size_t &hash)
+User::User(const std::string &name, const long &balance, const size_t &hash)
 {
     this->name = name;
     this->balance = balance;
     setHash(hash);
 }
 
-bool User::UpdateBalance(const int &balance, const char &type)
+bool User::UpdateBalance(const long &balance, const char &type)
 {
     int temp = this->balance;
 
     if (type == constantsAccount::DEPOSIT)
     {
         this->balance += balance;
+
+        if (this->balance > constantsAccount::MAX_BALANCE)
+        {
+            this->balance = temp;
+            std::cout << "Balance max limit of 1,000,000,000.00 exceeded! Task terminated.\n"
+                      << std::endl;
+            return false;
+        }
     }
     else if (type == constantsAccount::WITHDRAW)
     {
         this->balance -= balance;
 
-        if (absUtil(this->balance) > constantsAccount::OVERDRAFT_LIMIT)
+        if (this->balance < 0 && absUtil(this->balance) > constantsAccount::OVERDRAFT_LIMIT)
         {
             this->balance = temp;
             std::cout << "Overdraft limit of 10,000.00 exceeded! Task terminated.\n"

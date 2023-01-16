@@ -3,6 +3,7 @@
 #include <limits>
 #include <fstream>
 #include <vector>
+#include <iomanip>
 #include "constants.h"
 #include "userInfo.cpp"
 
@@ -10,28 +11,46 @@ bool isNameValid(const std::string &name)
 {
     unsigned short spaces = 0;
     unsigned short upperCaseLetters = 0;
+    unsigned short firstNameLen = 0;
+    unsigned short surNameLen = 0;
+
     for (unsigned short i = 0; i < name.size(); ++i)
     {
+        // if letter is uppercase && first in name sequence
         if ((name[i] - 'A' >= 0 && name[i] - 'A' <= 26) && (i == 0 || name[i - 1] == ' '))
         {
             ++upperCaseLetters;
+            if (spaces == 0)
+            {
+                ++firstNameLen;
+            }
+            if (spaces == 1)
+            {
+                ++surNameLen;
+            }
         }
         else if (name[i] == ' ')
         {
             ++spaces;
         }
-
-        else if (name[i] - 'a' < 0 || name[i] - 'a' > 26)
+        else if (name[i] - 'a' >= 0 && name[i] - 'a' <= 26)
+        {
+            if (spaces == 0)
+            {
+                ++firstNameLen;
+            }
+            if (spaces == 1)
+            {
+                ++surNameLen;
+            }
+            continue;
+        }
+        else
         {
             return false;
         }
     }
-
-    if (!(spaces == 1 && upperCaseLetters == 2))
-    {
-        return false;
-    }
-    return true;
+    return (spaces == 1 && upperCaseLetters == 2 && firstNameLen > 3 && surNameLen > 3);
 }
 
 bool isPasswordValid(const std::string &password)
@@ -73,11 +92,7 @@ bool isPasswordValid(const std::string &password)
         }
     }
 
-    if (!(hasUpperCase && hasLowerCase && hasNumber && hasSpecialCharacter))
-    {
-        return false;
-    }
-    return true;
+    return (hasUpperCase && hasLowerCase && hasNumber && hasSpecialCharacter);
 }
 
 bool isInputValid(const std::string &name, const std::string &password)
@@ -101,7 +116,10 @@ bool isInputValid(const std::string &name, const std::string &password)
 
 void cancelAccount(User &user)
 {
-    user.cancelAccount();
+    if (!user.cancelAccount())
+    {
+        std::cout << "Error: Cannot close account!. Try again later or contact support." << std::endl;
+    }
 }
 
 void displayAccountOptions(void)
@@ -117,7 +135,7 @@ void displayAccountOptions(void)
 
 User getUserInfo(std::fstream &file, const std::string &name, const std::size_t &hash = -1)
 {
-    int balance = 0; // saved in the smallest currency unit, in this case cents
+    long balance = 0; // saved in the smallest currency unit, in this case cents
     unsigned short size = 0;
     std::string currentUser;
 
@@ -140,6 +158,7 @@ User getUserInfo(std::fstream &file, const std::string &name, const std::size_t 
             currentHash = currentHash * 10 + currentUser[i] - '0';
             ++i;
         }
+        ++i;
 
         if (currentName != name)
         {
@@ -150,7 +169,6 @@ User getUserInfo(std::fstream &file, const std::string &name, const std::size_t 
         {
             continue;
         }
-        ++i;
 
         if (currentUser[i] == '-')
         {
@@ -165,34 +183,41 @@ User getUserInfo(std::fstream &file, const std::string &name, const std::size_t 
         }
 
         balance = isNegative ? balance * -1 : balance;
-
         User user(name, balance, hash);
+
+        file.close();
         return user;
     }
+    User nullUser;
 
     file.close();
-    User nullUser;
     return nullUser;
 };
 
-void deposit(User &user)
+bool doesUserExists(std::fstream &file, const std::string &name, const std::size_t &hash = -1)
 {
-    double amount = 0;
-    std::cout << "Enter deposit amount: ";
-    std::cin >> amount;
+    return (!getUserInfo(file, name, hash).name.empty());
+}
 
-    if (std::cin.fail() || amount < 0)
-    {
-        std::cout << "\033[31mError:\033[0m: Invalid input data! Task terminated" << std::endl;
-        return;
-    }
-    user.UpdateBalance((int)(amount * constantsAccount::ROUND_PRECISION), constantsAccount::DEPOSIT);
-};
+bool takeUserInput(std::string &name, std::string &password)
+{
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    std::cout << "Enter Full Name: ";
+    std::getline(std::cin, name);
+
+    std::cout << "Enter Password: ";
+    std::getline(std::cin, password);
+
+    std::cout << std::endl;
+
+    return (!std::cin.fail() && isInputValid(name, password));
+}
 
 void transfer(User &user)
 {
     std::string receiverName;
-    double amount = 0;
+    long double amount = 0;
 
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
@@ -232,13 +257,28 @@ void transfer(User &user)
         std::cout << "\033[31mError:\033[0m Insufficient balance! Task terminated" << std::endl;
         return;
     }
-    receiver.UpdateBalance((int)(amount * constantsAccount::ROUND_PRECISION), constantsAccount::DEPOSIT);
+    if (!receiver.UpdateBalance((int)(amount * constantsAccount::ROUND_PRECISION), constantsAccount::DEPOSIT))
+    {
+        std::cout << "Error: Cannot transfer balance to " << receiverName << "!" << std::endl;
+        std::cout << "Restoring balance..." << std::endl;
+        if (!user.UpdateBalance((int)(amount * constantsAccount::ROUND_PRECISION), constantsAccount::DEPOSIT))
+        {
+            std::cout << "FATAL Error! Cannot restore balance. Account problem found. Contact customer support!" << std::endl;
+            std::cout << "Press any key to close...";
+            std::getchar();
+            exit(EXIT_FAILURE);
+        }
+        std::cout << "Done" << std::endl;
+        return;
+    }
+
+    std::cout << "Successful transfer" << std::endl;
 };
 
-void withdraw(User &user)
+void balanceOperation(User &user, const char &TYPE)
 {
-    double amount = 0;
-    std::cout << "Enter withdraw amount: ";
+    long double amount = 0;
+    std::cout << "Enter deposit amount: ";
     std::cin >> amount;
 
     if (std::cin.fail() || amount < 0)
@@ -246,8 +286,8 @@ void withdraw(User &user)
         std::cout << "\033[31mError:\033[0m: Invalid input data! Task terminated" << std::endl;
         return;
     }
-    user.UpdateBalance((int)(amount * constantsAccount::ROUND_PRECISION), constantsAccount::WITHDRAW);
-};
+    user.UpdateBalance(amount * constantsAccount::ROUND_PRECISION, TYPE);
+}
 
 void account(User &user)
 {
@@ -255,8 +295,10 @@ void account(User &user)
 
     while (true)
     {
-        std::cout << "You have \033[32;1m " << (double)user.balance / constantsAccount::ROUND_PRECISION << " BGN\033[0m.\n"
-                  << std::endl;
+        std::cout << "You have \033[32;1m ";
+        std::cout << std::fixed << std::setprecision(2) << user.balance / constantsAccount::ROUND_PRECISION;
+        std::cout << " BGN\033[0m\n";
+        std::cout << std::endl;
 
         displayAccountOptions();
 
@@ -271,7 +313,7 @@ void account(User &user)
             break;
         case constantsAccount::DEPOSIT:
             std::cout << "Deposit selected" << std::endl;
-            deposit(user);
+            balanceOperation(user, constantsAccount::DEPOSIT);
             continue;
         case constantsAccount::LOGOUT:
             std::cout << "Logout selected" << std::endl;
@@ -282,7 +324,7 @@ void account(User &user)
             continue;
         case constantsAccount::WITHDRAW:
             std::cout << "Withdraw selected" << std::endl;
-            withdraw(user);
+            balanceOperation(user, constantsAccount::WITHDRAW);
             continue;
 
         default:
@@ -298,15 +340,7 @@ void registerNewUser(void)
     std::string name;
     std::string password;
 
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-    std::cout << "Enter Full Name: ";
-    std::getline(std::cin, name);
-
-    std::cout << "Enter Password: ";
-    std::getline(std::cin, password);
-
-    if (!isInputValid(name, password))
+    if (!takeUserInput(name, password))
     {
         return;
     }
@@ -322,40 +356,36 @@ void registerNewUser(void)
         std::cout << "\033[33;1mWarning:\033[0m " << constantsInit::FILE_NAME << " file does not exist.\nDo you want to create " << constantsInit::FILE_NAME << " and continue? [y,N] ";
         std::cin >> input;
 
-        if (input == constantsInit::YES)
-        {
-            file.open(constantsInit::FILE_NAME, std::ios::out);
-            if (!file)
-            {
-                std::cout << "\033[31mError:\033[0m: Cannot create file! Task terminated.";
-                file.close();
-
-                std::cout << "Press any key to close...";
-                std::getchar();
-                exit(EXIT_FAILURE);
-            }
-            file << name << ":" << hash << ":" << 0 << "\n";
-            file.close();
-            return;
-        }
-        else
+        if (input != constantsInit::YES)
         {
             std::cout << "Task terminated!" << std::endl;
-            file.close();
             return;
+        }
+
+        file.open(constantsInit::FILE_NAME, std::ios::out);
+        if (!file)
+        {
+            std::cout << "\033[31mError:\033[0m: Cannot create file! Task terminated." << std::endl;
+            std::cout << "Press any key to close...";
+            std::getchar();
+            exit(EXIT_FAILURE);
         }
     }
 
-    if (!getUserInfo(file, name, hash).name.empty())
+    if (doesUserExists(file, name, hash))
     {
         std::cout << "\033[33;1mWarning:\033[0m User already exists! Task terminated." << std::endl;
         return;
     }
-    file.close();
+
+    User user(name, 0, hash);
+
     file.open(constantsInit::FILE_NAME, std::ios::app);
     file << name << ":" << hash << ":" << 0 << "\n";
     file.close();
-    std::cout << "success" << std::endl;
+
+    std::cout << "Account created successfully." << std::endl;
+    account(user);
     return;
 }
 
@@ -364,15 +394,7 @@ void login(void)
     std::string name;
     std::string password;
 
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-    std::cout << "Enter Full Name: ";
-    std::getline(std::cin, name);
-
-    std::cout << "Enter Password: ";
-    std::getline(std::cin, password);
-
-    if (!isInputValid(name, password))
+    if (!takeUserInput(name, password))
     {
         return;
     }
@@ -411,8 +433,10 @@ void displayOptions(void)
 
 int main(void)
 {
+    // make system call to enable ANSI support on Windows terminal. ANSI supported on other platforms
+    // system("");
     std::cout << " ============================================== " << std::endl;
-    std::cout << "|   Course project - No9    \033[1m\033[37;1m~ BANK SOFTWARE ~\033[0m   |" << std::endl;
+    std::cout << "|   Course project - No9    \033[1m\033[37;1m~ BANK SOFTWARE ~\033[0m  |" << std::endl;
     std::cout << "|    Author - Bozhidar Tomov - 0MI0600171      |" << std::endl;
     std::cout << "|           Year 1, Winter Semester            |" << std::endl;
     std::cout << "|                     2023                     |" << std::endl;
@@ -428,15 +452,14 @@ int main(void)
         switch (input)
         {
         case constantsInit::LOGIN:
-            std::cout << "login selected" << std::endl;
+            std::cout << "Login selected" << std::endl;
             login();
             break;
         case constantsInit::REGISTER:
-            std::cout << "register selected" << std::endl;
+            std::cout << "Register selected" << std::endl;
             registerNewUser();
             break;
         case constantsInit::QUIT:
-            std::cout << "quit selected" << std::endl;
             break;
 
         default:
