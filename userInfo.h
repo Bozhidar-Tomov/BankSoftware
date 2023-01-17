@@ -1,6 +1,9 @@
 #ifndef USER_INFO
 #define USER_INFO
 
+#include <string>
+#include <cstddef>
+
 struct User
 {
 public:
@@ -8,14 +11,15 @@ public:
     long balance;
 
     User(void);
-    User(const std::string &name, const long &balance, const size_t &hash);
-    bool UpdateBalance(const long &balance, const char &type);
+    User(const std::string &, const long &, const size_t &);
+    bool UpdateBalance(const long &, const char &);
     bool cancelAccount(void);
 
 private:
-    void setHash(const size_t &hash);
-    bool saveChanges(void);
     size_t hash;
+
+    void setHash(const size_t &);
+    bool saveChanges(void);
 };
 
 #endif

@@ -1,6 +1,8 @@
 #ifndef CONSTANTS
 #define CONSTANTS
 
+#include <cstddef>
+
 namespace constantsInit
 {
     constexpr char LOGIN{'L'};
@@ -25,14 +27,14 @@ namespace constantsInit
 
 namespace constantsAccount
 {
-    constexpr char CANCEL{'C'};
-    constexpr char DEPOSIT{'D'};
-    constexpr char LOGOUT{'L'};
-    constexpr char TRANSFER{'T'};
-    constexpr char WITHDRAW{'W'};
-    constexpr double ROUND_PRECISION{100.0};
-    constexpr int OVERDRAFT_LIMIT{1000000};
-    constexpr size_t MAX_BALANCE{100000000000}; // 1 billion currency units (whole base BGN)
+    static constexpr char CANCEL{'C'};
+    static constexpr char DEPOSIT{'D'};
+    static constexpr char LOGOUT{'L'};
+    static constexpr char TRANSFER{'T'};
+    static constexpr char WITHDRAW{'W'};
+    static constexpr double ROUND_PRECISION{100.0};
+    static constexpr int OVERDRAFT_LIMIT{1000000};
+    static constexpr size_t MAX_BALANCE{100000000000}; // 1 billion currency units (whole base BGN)
 }
 
 #endif

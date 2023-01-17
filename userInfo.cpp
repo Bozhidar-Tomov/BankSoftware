@@ -1,5 +1,12 @@
 #include "userInfo.h"
-#include "utils.cpp"
+
+#include "utils.h"
+#include "constants.h"
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
 
 User::User(void)
 {
