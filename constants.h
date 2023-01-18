@@ -13,8 +13,8 @@ namespace constantsInit
     static constexpr char FILE_NAME[10] = {"users.txt"};
     static constexpr unsigned short MIN_LEN_PASSWORD = 5;
     static constexpr unsigned short MAX_LEN_PASSWORD = 20;
-    static constexpr unsigned short MAX_LEN_NAME = 3;
-    static constexpr unsigned short MIN_LEN_NAME = 20;
+    static constexpr unsigned short MIN_LEN_NAME = 3;
+    static constexpr unsigned short MAX_LEN_NAME = 20;
 }
 
 namespace constantsAccount
