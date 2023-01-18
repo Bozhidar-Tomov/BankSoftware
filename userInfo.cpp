@@ -71,7 +71,7 @@ bool User::saveChanges(void)
     std::fstream file;
 
     file.open(constantsInit::FILE_NAME, std::ios::in);
-    if (file.fail())
+    if (!file.is_open())
     {
         std::cout << "\033[31mError:\033[0m Cannot save changes! Task terminated.\n"
                   << std::endl;
@@ -102,7 +102,7 @@ bool User::saveChanges(void)
     file.close();
 
     file.open(constantsInit::FILE_NAME, std::ios::out);
-    if (file.fail())
+    if (!file.is_open())
     {
         std::cout << "\033[31mError:\033[0m: Cannot save changes! Task terminated.\n"
                   << std::endl;
@@ -127,7 +127,7 @@ bool User::cancelAccount(void)
     std::vector<std::string> users;
 
     file.open(constantsInit::FILE_NAME, std::ios::in);
-    if (file.fail())
+    if (!file.is_open())
     {
         std::cout << "\033[31mError:\033[0m: Cannot open file " << constantsInit::FILE_NAME << " ! Task terminated" << std::endl;
         return false;
@@ -161,7 +161,7 @@ bool User::cancelAccount(void)
     file.close();
 
     file.open(constantsInit::FILE_NAME, std::ios::out);
-    if (file.fail())
+    if (!file.is_open())
     {
         std::cout << "\033[31mError:\033[0m: Cannot open file " << constantsInit::FILE_NAME << " ! Task terminated" << std::endl;
         return false;

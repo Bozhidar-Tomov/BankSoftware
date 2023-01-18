@@ -8,7 +8,7 @@
 #include <iostream>
 #include <fstream>
 
-void registerNewUser(void)
+static void registerNewUser(void)
 {
     std::string name;
     std::string password;
@@ -22,7 +22,7 @@ void registerNewUser(void)
     size_t hash = std::hash<std::string>{}(password);
 
     file.open(constantsInit::FILE_NAME, std::ios::in);
-    if (!file)
+    if (!file.is_open())
     {
         char input = '\0';
 
@@ -36,7 +36,7 @@ void registerNewUser(void)
         }
 
         file.open(constantsInit::FILE_NAME, std::ios::out);
-        if (!file)
+        if (!file.is_open())
         {
             std::cout << "\033[31mError:\033[0m: Cannot create file! Task terminated." << std::endl;
             std::cout << "Press any key to close...";
@@ -62,7 +62,7 @@ void registerNewUser(void)
     return;
 }
 
-void login(void)
+static void login(void)
 {
     std::string name;
     std::string password;
@@ -76,9 +76,9 @@ void login(void)
     size_t hash = std::hash<std::string>{}(password);
 
     file.open(constantsInit::FILE_NAME, std::ios::in);
-    if (!file)
+    if (!file.is_open())
     {
-        std::cout << "\033[31mError:\033[0m " << constantsInit::FILE_NAME << " file does not exist.";
+        std::cout << "\033[31mError:\033[0m " << constantsInit::FILE_NAME << " file does not exist." << std::endl;
 
         std::cout << "Press any key to close...";
         std::getchar();
@@ -95,11 +95,52 @@ void login(void)
     account(user);
 }
 
-void displayOptions(void)
+static void displayOptions(void)
 {
     std::cout << "\033[4m Choose an option: \033[0m" << std::endl;
     std::cout << "\033[33mL\033[0m --> Login" << std::endl;
     std::cout << "\033[33mR\033[0m --> Register" << std::endl;
     std::cout << "\033[33mQ\033[0m --> Quit" << std::endl;
+    return;
+}
+
+void run(void)
+{
+    std::cout << " ============================================== " << std::endl;
+    std::cout << "|   Course project - No9    \033[1m\033[37;1m~ BANK SOFTWARE ~\033[0m  |" << std::endl;
+    std::cout << "|    Author - Bozhidar Tomov - 0MI0600171      |" << std::endl;
+    std::cout << "|           Year 1, Winter Semester            |" << std::endl;
+    std::cout << "|                     2023                     |" << std::endl;
+    std::cout << " ============================================== " << std::endl;
+    std::cout << std::endl;
+    displayOptions();
+
+    while (true)
+    {
+        char input = '\0';
+        std::cin >> input;
+
+        switch (input)
+        {
+        case constantsInit::LOGIN:
+            std::cout << "Login selected" << std::endl;
+            login();
+            break;
+        case constantsInit::REGISTER:
+            std::cout << "Register selected" << std::endl;
+            registerNewUser();
+            break;
+        case constantsInit::QUIT:
+            break;
+
+        default:
+            std::cout << "Invalid Input." << std::endl;
+            displayOptions();
+            continue;
+        }
+        std::cout << "Press any key to close...";
+        std::getchar();
+        break;
+    }
     return;
 }

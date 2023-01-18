@@ -170,7 +170,11 @@ bool isNameValid(const std::string &name)
             return false;
         }
     }
-    return (spaces == 1 && upperCaseLetters == 2 && firstNameLen > 3 && surNameLen > 3);
+    return (spaces == 1 && upperCaseLetters == 2 &&
+            firstNameLen >= constantsInit::MIN_LEN_NAME &&
+            firstNameLen <= constantsInit::MAX_LEN_NAME &&
+            surNameLen >= constantsInit::MIN_LEN_NAME &&
+            surNameLen <= constantsInit::MAX_LEN_NAME);
 }
 
 bool isPasswordValid(const std::string &password)

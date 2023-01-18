@@ -5,24 +5,16 @@
 
 namespace constantsInit
 {
-    constexpr char LOGIN{'L'};
-    constexpr char REGISTER{'R'};
-    constexpr char QUIT{'Q'};
-    constexpr char YES{'y'};
-    constexpr char ALLOWED_SPECIAL_CHARS[8] = {'!', '@', '#', '$', '%', '^', '&', '*'};
-    constexpr char FILE_NAME[10] = {
-        'u',
-        's',
-        'e',
-        'r',
-        's',
-        '.',
-        't',
-        'x',
-        't',
-        '\0'};
-    const unsigned short MIN_LEN_PASSWORD = 5;
-    const unsigned short MAX_LEN_PASSWORD = 20;
+    static constexpr char LOGIN{'L'};
+    static constexpr char REGISTER{'R'};
+    static constexpr char QUIT{'Q'};
+    static constexpr char YES{'y'};
+    static constexpr char ALLOWED_SPECIAL_CHARS[8] = {'!', '@', '#', '$', '%', '^', '&', '*'};
+    static constexpr char FILE_NAME[10] = {"users.txt"};
+    static constexpr unsigned short MIN_LEN_PASSWORD = 5;
+    static constexpr unsigned short MAX_LEN_PASSWORD = 20;
+    static constexpr unsigned short MAX_LEN_NAME = 3;
+    static constexpr unsigned short MIN_LEN_NAME = 20;
 }
 
 namespace constantsAccount

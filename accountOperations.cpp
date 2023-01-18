@@ -26,6 +26,9 @@ static void cancelAccount(User &user)
     {
         std::cout << "Error: Cannot close account!. Try again later or contact support." << std::endl;
     }
+    std::cout << "Press any key to close...";
+    std::getchar();
+    return;
 }
 
 static void transfer(User &user)
@@ -49,9 +52,9 @@ static void transfer(User &user)
 
     std::fstream file;
     file.open(constantsInit::FILE_NAME, std::ios::in);
-    if (!file)
+    if (!file.is_open())
     {
-        std::cout << "\033[31mError:\033[0m " << constantsInit::FILE_NAME << " file does not exist.";
+        std::cout << "\033[31mError:\033[0m " << constantsInit::FILE_NAME << " file does not exist." << std::endl;
 
         std::cout << "Press any key to close...";
         std::getchar();
