@@ -12,7 +12,7 @@
 static void displayAccountOptions(void)
 {
     std::cout << "\033[4m Choose an option: \033[0m" << std::endl;
-    std::cout << "\033[31mC\033[0m --> Cancel account" << std::endl;
+    std::cout << "\033[31;1mC\033[0m --> Cancel account" << std::endl;
     std::cout << "\033[36mD\033[0m --> Deposit" << std::endl;
     std::cout << "\033[36mL\033[0m --> Logout" << std::endl;
     std::cout << "\033[36mT\033[0m --> Transfer" << std::endl;
@@ -44,6 +44,7 @@ static void transfer(User &user)
 {
     std::string receiverName;
     long double amount = 0;
+    std::string amountStr;
 
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
@@ -51,10 +52,20 @@ static void transfer(User &user)
     std::getline(std::cin, receiverName);
 
     std::cout << "Enter transfer amount: ";
-    std::cin >> amount;
+    std::getline(std::cin, amountStr);
+
+    if (!isValidDouble(amountStr, amountStr.size()))
+    {
+        std::cout << "\033[31mError:\033[0m Invalid input data! Task terminated" << std::endl;
+        return;
+    }
+
+    amount = castToDouble(amountStr, amountStr.size());
 
     if (std::cin.fail() || !isNameValid(receiverName))
     {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::cout << "\033[31mError:\033[0m Invalid input data! Task terminated" << std::endl;
         return;
     }
@@ -119,14 +130,20 @@ static void transfer(User &user)
 static void balanceOperation(User &user, const char &TYPE)
 {
     long double amount = 0;
-    std::cout << "Enter deposit amount: ";
-    std::cin >> amount;
+    std::string amountStr;
 
-    if (std::cin.fail())
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    std::cout << "Enter deposit amount: ";
+    std::getline(std::cin, amountStr);
+
+    if (!isValidDouble(amountStr, amountStr.size()))
     {
         std::cout << "\033[31mError:\033[0m Invalid input data! Task terminated" << std::endl;
         return;
     }
+
+    amount = castToDouble(amountStr, amountStr.size());
 
     if (amount <= 0 || amount > constantsAccount::MAX_AMOUNT_PER_OPERATION)
     {
@@ -178,8 +195,8 @@ void account(User &user)
             balanceOperation(user, constantsAccount::WITHDRAW);
             continue;
         default:
-            std::cout << "Invalid Input." << std::endl;
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid Input." << std::endl;
             continue;
         }
     }

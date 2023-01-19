@@ -124,7 +124,14 @@ bool takeUserInput(std::string &name, std::string &password)
 
     std::cout << std::endl;
 
-    return (!std::cin.fail() && isInputValid(name, password));
+    if (std::cin.fail())
+    {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        return false;
+    }
+
+    return (isInputValid(name, password));
 }
 
 bool isNameValid(const std::string &name)
@@ -223,7 +230,7 @@ bool isInputValid(const std::string &name, const std::string &password)
 {
     if (!isNameValid(name))
     {
-        std::cout << "\n\n\033[47m\033[30;1mError:\033[0m Insufficient Name" << std::endl;
+        std::cout << "\n\n\033[47m\033[30mError:\033[0m Insufficient Name" << std::endl;
         std::cout << "\tGuide: The name should consist only of latin characters [A-Z a-z] and be in the form of <FirstName Surname>" << std::endl;
         return false;
     }
@@ -236,4 +243,53 @@ bool isInputValid(const std::string &name, const std::string &password)
         return false;
     }
     return true;
+}
+
+bool isValidDouble(const std::string &input, const int &size)
+{
+    int i = 0;
+    short hasDelimiter = 0;
+
+    while (i < size && input[i] != '\0')
+    {
+        if (input[i] < '0' || input[i] > '9')
+        {
+            if (input[i] == '.' || input[i] == ',')
+            {
+                ++hasDelimiter;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        if (hasDelimiter > 1)
+        {
+            return 0;
+        }
+        ++i;
+    }
+    return 1;
+}
+
+long double castToDouble(const std::string &input, const int &size)
+{
+    int i = 0;
+    long double number = 0;
+    int base = 10;
+
+    while (i < size && !(input[i] == '.' || input[i] == ',') && input[i] != '\0')
+    {
+        number = number * base + (input[i++] - '0');
+    }
+
+    ++i;
+
+    while (i < size && input[i] != '\0')
+    {
+        number = number + ((long double)(input[i++] - '0') / base);
+        base *= 10;
+    }
+    return number;
 }

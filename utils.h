@@ -13,5 +13,7 @@ bool takeUserInput(std::string &, std::string &);
 bool isNameValid(const std::string &);
 bool isPasswordValid(const std::string &);
 bool isInputValid(const std::string &, const std::string &);
+long double castToDouble(const std::string &, const int &);
+bool isValidDouble(const std::string &, const int &);
 
 #endif
