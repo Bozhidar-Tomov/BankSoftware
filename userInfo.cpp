@@ -104,7 +104,7 @@ bool User::saveChanges(void)
     file.open(constantsInit::FILE_NAME, std::ios::out);
     if (!file.is_open())
     {
-        std::cout << "\033[31mError:\033[0m: Cannot save changes! Task terminated.\n"
+        std::cout << "\033[31mError:\033[0m Cannot save changes! Task terminated.\n"
                   << std::endl;
 
         return false;
@@ -121,15 +121,34 @@ bool User::saveChanges(void)
     return true;
 }
 
-bool User::cancelAccount(void)
+bool User::cancelAccount(const std::string &name, const std::size_t &hash)
 {
+
+    if (name != this->name || hash != this->hash)
+    {
+        std::cout << "\033[31mError:\033[0m The name or password does not match! Task terminated" << std::endl;
+        return false;
+    }
+
+    if (this->balance < 0)
+    {
+        std::cout << "You have a pending overdraft." << std::endl;
+        return false;
+    }
+
+    if (this->balance > 0)
+    {
+        std::cout << "Info: Withdraw your balance before closing account." << std::endl;
+        return false;
+    }
+
     std::fstream file;
     std::vector<std::string> users;
 
     file.open(constantsInit::FILE_NAME, std::ios::in);
     if (!file.is_open())
     {
-        std::cout << "\033[31mError:\033[0m: Cannot open file " << constantsInit::FILE_NAME << " ! Task terminated" << std::endl;
+        std::cout << "\033[31mError:\033[0m Cannot open file " << constantsInit::FILE_NAME << " ! Task terminated" << std::endl;
         return false;
     }
 
@@ -163,7 +182,7 @@ bool User::cancelAccount(void)
     file.open(constantsInit::FILE_NAME, std::ios::out);
     if (!file.is_open())
     {
-        std::cout << "\033[31mError:\033[0m: Cannot open file " << constantsInit::FILE_NAME << " ! Task terminated" << std::endl;
+        std::cout << "\033[31mError:\033[0m Cannot open file " << constantsInit::FILE_NAME << " ! Task terminated" << std::endl;
         return false;
     }
 

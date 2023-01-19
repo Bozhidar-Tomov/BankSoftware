@@ -20,15 +20,24 @@ static void displayAccountOptions(void)
     return;
 }
 
-static void cancelAccount(User &user)
+static bool cancelAccount(User &user)
 {
-    if (!user.cancelAccount())
+    std::string name;
+    std::string password;
+
+    if (!takeUserInput(name, password))
     {
-        std::cout << "Error: Cannot close account!. Try again later or contact support." << std::endl;
+        return false;
     }
-    std::cout << "Press any key to close...";
-    std::getchar();
-    return;
+
+    size_t hash = std::hash<std::string>{}(password);
+
+    if (!user.cancelAccount(name, hash))
+    {
+        std::cout << "\033[31mError:\033[0m Cannot close account!. Try again later or contact support." << std::endl;
+        return false;
+    }
+    return true;
 }
 
 static void transfer(User &user)
@@ -44,9 +53,15 @@ static void transfer(User &user)
     std::cout << "Enter transfer amount: ";
     std::cin >> amount;
 
-    if (std::cin.fail() || amount < 0 || !isNameValid(receiverName))
+    if (std::cin.fail() || !isNameValid(receiverName))
     {
-        std::cout << "\033[31mError:\033[0m: Invalid input data! Task terminated" << std::endl;
+        std::cout << "\033[31mError:\033[0m Invalid input data! Task terminated" << std::endl;
+        return;
+    }
+
+    if (amount <= 0 || amount > constantsAccount::MAX_AMOUNT_PER_OPERATION)
+    {
+        std::cout << "\033[31mError:\033[0m Amount per operation should be in the range [0.01 - 5000.00]. Task terminated." << std::endl;
         return;
     }
 
@@ -61,27 +76,36 @@ static void transfer(User &user)
         exit(EXIT_FAILURE);
     }
 
+    if (receiverName == user.name)
+    {
+        std::cout << "Invalid Receiver! Task terminated." << std::endl;
+        return;
+    }
+
     User receiver = getUserInfo(file, receiverName);
 
     if (receiver.name.empty())
     {
-        std::cout << "\033[31mError:\033[0m: User not found." << std::endl;
+        std::cout << "\033[31mError:\033[0m Receiver not found." << std::endl;
         return;
     }
 
-    if (!user.UpdateBalance((int)(amount * constantsAccount::ROUND_PRECISION), constantsAccount::WITHDRAW))
+    if (!user.UpdateBalance((long)(amount * constantsAccount::ROUND_PRECISION), constantsAccount::WITHDRAW))
     {
         std::cout << "\033[31mError:\033[0m Insufficient balance! Task terminated" << std::endl;
         return;
     }
-    if (!receiver.UpdateBalance((int)(amount * constantsAccount::ROUND_PRECISION), constantsAccount::DEPOSIT))
+
+    if (!receiver.UpdateBalance((long)(amount * constantsAccount::ROUND_PRECISION), constantsAccount::DEPOSIT))
     {
-        std::cout << "Error: Cannot transfer balance to " << receiverName << "!" << std::endl;
+        std::cout << "\033[31mError:\033[0m Cannot transfer balance to " << receiverName << "!" << std::endl;
         std::cout << "Restoring balance..." << std::endl;
-        if (!user.UpdateBalance((int)(amount * constantsAccount::ROUND_PRECISION), constantsAccount::DEPOSIT))
+
+        if (!user.UpdateBalance((long)(amount * constantsAccount::ROUND_PRECISION), constantsAccount::DEPOSIT))
         {
-            std::cout << "FATAL Error! Cannot restore balance. Account problem found. Contact customer support!" << std::endl;
+            std::cout << "\033[41m\033[37;1mFATAL Error!\033[0m Cannot restore balance. Account problem found. Contact customer support!" << std::endl;
             std::cout << "Press any key to close...";
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::getchar();
             exit(EXIT_FAILURE);
         }
@@ -89,7 +113,7 @@ static void transfer(User &user)
         return;
     }
 
-    std::cout << "Successful transfer" << std::endl;
+    std::cout << "Successful transfer." << std::endl;
 };
 
 static void balanceOperation(User &user, const char &TYPE)
@@ -98,12 +122,19 @@ static void balanceOperation(User &user, const char &TYPE)
     std::cout << "Enter deposit amount: ";
     std::cin >> amount;
 
-    if (std::cin.fail() || amount < 0)
+    if (std::cin.fail())
     {
-        std::cout << "\033[31mError:\033[0m: Invalid input data! Task terminated" << std::endl;
+        std::cout << "\033[31mError:\033[0m Invalid input data! Task terminated" << std::endl;
         return;
     }
-    user.UpdateBalance(amount * constantsAccount::ROUND_PRECISION, TYPE);
+
+    if (amount <= 0 || amount > constantsAccount::MAX_AMOUNT_PER_OPERATION)
+    {
+        std::cout << "\033[31mError:\033[0m Amount per operation should be in the range [0.01 - 5000.00]. Task terminated." << std::endl;
+        return;
+    }
+
+    user.UpdateBalance((long)(amount * constantsAccount::ROUND_PRECISION), TYPE);
 }
 
 void account(User &user)
@@ -112,7 +143,7 @@ void account(User &user)
 
     while (true)
     {
-        std::cout << "You have \033[32;1m ";
+        std::cout << "\nBalance \033[32;1m ";
         std::cout << std::fixed << std::setprecision(2) << user.balance / constantsAccount::ROUND_PRECISION;
         std::cout << " BGN\033[0m\n";
         std::cout << std::endl;
@@ -126,15 +157,18 @@ void account(User &user)
         {
         case constantsAccount::CANCEL:
             std::cout << "Cancel selected" << std::endl;
-            cancelAccount(user);
-            break;
+            if (cancelAccount(user))
+            {
+                return;
+            }
+            continue;
         case constantsAccount::DEPOSIT:
             std::cout << "Deposit selected" << std::endl;
             balanceOperation(user, constantsAccount::DEPOSIT);
             continue;
         case constantsAccount::LOGOUT:
             std::cout << "Logout selected" << std::endl;
-            break;
+            return;
         case constantsAccount::TRANSFER:
             std::cout << "Transfer selected" << std::endl;
             transfer(user);
@@ -143,11 +177,11 @@ void account(User &user)
             std::cout << "Withdraw selected" << std::endl;
             balanceOperation(user, constantsAccount::WITHDRAW);
             continue;
-
         default:
             std::cout << "Invalid Input." << std::endl;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             continue;
         }
-        break;
     }
+    return;
 }

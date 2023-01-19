@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <limits>
 
 static void registerNewUser(void)
 {
@@ -38,7 +39,7 @@ static void registerNewUser(void)
         file.open(constantsInit::FILE_NAME, std::ios::out);
         if (!file.is_open())
         {
-            std::cout << "\033[31mError:\033[0m: Cannot create file! Task terminated." << std::endl;
+            std::cout << "\033[31mError:\033[0m Cannot create file! Task terminated." << std::endl;
             std::cout << "Press any key to close...";
             std::getchar();
             exit(EXIT_FAILURE);
@@ -97,6 +98,7 @@ static void login(void)
 
 static void displayOptions(void)
 {
+    std::cout << std::endl;
     std::cout << "\033[4m Choose an option: \033[0m" << std::endl;
     std::cout << "\033[33mL\033[0m --> Login" << std::endl;
     std::cout << "\033[33mR\033[0m --> Register" << std::endl;
@@ -112,11 +114,11 @@ void run(void)
     std::cout << "|           Year 1, Winter Semester            |" << std::endl;
     std::cout << "|                     2023                     |" << std::endl;
     std::cout << " ============================================== " << std::endl;
-    std::cout << std::endl;
-    displayOptions();
 
     while (true)
     {
+        displayOptions();
+
         char input = '\0';
         std::cin >> input;
 
@@ -125,19 +127,20 @@ void run(void)
         case constantsInit::LOGIN:
             std::cout << "Login selected" << std::endl;
             login();
-            break;
+            continue;
         case constantsInit::REGISTER:
             std::cout << "Register selected" << std::endl;
             registerNewUser();
-            break;
+            continue;
+            ;
         case constantsInit::QUIT:
             break;
-
         default:
             std::cout << "Invalid Input." << std::endl;
-            displayOptions();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             continue;
         }
+
         std::cout << "Press any key to close...";
         std::getchar();
         break;

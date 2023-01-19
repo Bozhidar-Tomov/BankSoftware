@@ -25,8 +25,9 @@ namespace constantsAccount
     static constexpr char TRANSFER{'T'};
     static constexpr char WITHDRAW{'W'};
     static constexpr double ROUND_PRECISION{100.0};
-    static constexpr int OVERDRAFT_LIMIT{1000000};
+    static constexpr unsigned int OVERDRAFT_LIMIT{1000000};
     static constexpr size_t MAX_BALANCE{100000000000}; // 1 billion currency units (whole base BGN)
+    static constexpr unsigned short MAX_AMOUNT_PER_OPERATION = 5000;
 }
 
 #endif

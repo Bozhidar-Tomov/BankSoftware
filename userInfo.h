@@ -13,7 +13,7 @@ public:
     User(void);
     User(const std::string &, const long &, const size_t &);
     bool UpdateBalance(const long &, const char &);
-    bool cancelAccount(void);
+    bool cancelAccount(const std::string &, const std::size_t &);
 
 private:
     size_t hash;

@@ -30,6 +30,7 @@ After the user is successfully logged in they can:
 
 * Overdraft limit - 10,000.00 BGN
 * Maximum balance limit - 1,000,000,000.00 BGN (1 billion)
+* Withdraw / Deposit amount limit per time - 5000.00 BGN
 
 ### Validations
 
