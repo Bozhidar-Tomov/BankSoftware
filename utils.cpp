@@ -246,15 +246,18 @@ bool isInputValid(const std::string &name, const std::string &password)
     if (!isNameValid(name))
     {
         std::cout << "\n\n\033[47m\033[30mError:\033[0m Insufficient Name" << std::endl;
-        std::cout << "\tGuide: The name should consist only of latin characters [A-Z a-z] and be in the form of <FirstName Surname>" << std::endl;
+        std::cout << "\tGuide: The name should consist only of latin characters [A-Z a-z] "
+                  << "and be in the form of <FirstName Surname>" << std::endl;
         return false;
     }
 
     if (!isPasswordValid(password))
     {
         std::cout << "\n\033[47m\033[30;1mError:\033[0m  Insufficient Password" << std::endl;
-        std::cout << "\tGuide: Password should consist of latin letters [A-Z a-z], numbers [0-9] and symbols [! @ # $ % ^ & *]" << std::endl;
-        std::cout << "\tRequirements: At least 1 lowercase Letter, 1 uppercase letter and 1 symbol\n\tPassword length should be in the range [5, 20]." << std::endl;
+        std::cout << "\tGuide: Password should consist of latin letters [A-Z a-z], "
+                  << "numbers [0-9] and symbols [! @ # $ % ^ & *]" << std::endl;
+        std::cout << "\tRequirements: At least 1 lowercase Letter, 1 uppercase letter and 1 symbol\n\t"
+                  << "Password length should be in the range [5, 20]." << std::endl;
         return false;
     }
     return true;

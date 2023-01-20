@@ -42,7 +42,8 @@ static void registerNewUser(void)
     {
         char input = '\0';
 
-        std::cout << "\033[33;1mWarning:\033[0m " << constantsInit::FILE_NAME << " file does not exist.\nDo you want to create " << constantsInit::FILE_NAME << " and continue? [y,N] ";
+        std::cout << "\033[33;1mWarning:\033[0m " << constantsInit::FILE_NAME << " file does not exist.\n"
+                  << "Do you want to create " << constantsInit::FILE_NAME << " and continue? [y,N] ";
         std::cin >> input;
 
         if (input != constantsInit::YES)

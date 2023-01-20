@@ -49,7 +49,8 @@ static bool cancelAccount(User &user)
 
     if (!user.cancelAccount(name, hash))
     {
-        std::cout << "\033[31mError:\033[0m Cannot close account!. Try again later or contact support." << std::endl;
+        std::cout << "\033[31mError:\033[0m Cannot close account!. "
+                  << "Try again later or contact support." << std::endl;
         return false;
     }
     return true;
@@ -87,7 +88,8 @@ static void transfer(User &user)
 
     if (amount <= 0 || amount > constantsAccount::MAX_AMOUNT_PER_OPERATION)
     {
-        std::cout << "\033[31mError:\033[0m Amount per operation should be in the range [0.01 - 5000.00]. Task terminated." << std::endl;
+        std::cout << "\033[31mError:\033[0m Amount per operation should be in the range [0.01 - 5000.00]. "
+                  << "Task terminated." << std::endl;
         return;
     }
 
@@ -129,7 +131,8 @@ static void transfer(User &user)
 
         if (!user.UpdateBalance((long)(amount * constantsAccount::ROUND_PRECISION), constantsAccount::DEPOSIT))
         {
-            std::cout << "\033[41m\033[37;1mFATAL Error!\033[0m Cannot restore balance. Account problem found. Contact customer support!" << std::endl;
+            std::cout << "\033[41m\033[37;1mFATAL Error!\033[0m Cannot restore balance. "
+                      << "Account problem found. Contact customer support!" << std::endl;
             std::cout << "Press any key to close...";
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::getchar();
@@ -162,7 +165,8 @@ static void balanceOperation(User &user, const char &TYPE)
 
     if (amount <= 0 || amount > constantsAccount::MAX_AMOUNT_PER_OPERATION)
     {
-        std::cout << "\033[31mError:\033[0m Amount per operation should be in the range [0.01 - 5000.00]. Task terminated." << std::endl;
+        std::cout << "\033[31mError:\033[0m Amount per operation should be in the range [0.01 - 5000.00]. "
+                  << "Task terminated." << std::endl;
         return;
     }
 

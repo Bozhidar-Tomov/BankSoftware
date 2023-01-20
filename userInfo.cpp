@@ -163,7 +163,9 @@ bool User::cancelAccount(const std::string &name, const std::size_t &hash)
     file.open(constantsInit::FILE_NAME, std::ios::in);
     if (!file.is_open())
     {
-        std::cout << "\033[31mError:\033[0m Cannot open file " << constantsInit::FILE_NAME << " ! Task terminated" << std::endl;
+        std::cout << "\033[31mError:\033[0m Cannot open file "
+                  << constantsInit::FILE_NAME
+                  << " ! Task terminated" << std::endl;
         return false;
     }
 
@@ -197,7 +199,9 @@ bool User::cancelAccount(const std::string &name, const std::size_t &hash)
     file.open(constantsInit::FILE_NAME, std::ios::out);
     if (!file.is_open())
     {
-        std::cout << "\033[31mError:\033[0m Cannot open file " << constantsInit::FILE_NAME << " ! Task terminated" << std::endl;
+        std::cout << "\033[31mError:\033[0m Cannot open file "
+                  << constantsInit::FILE_NAME
+                  << " ! Task terminated" << std::endl;
         return false;
     }
 
