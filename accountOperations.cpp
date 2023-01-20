@@ -20,6 +20,7 @@
 #include "utils.h"
 
 #include <iostream>
+#include <cstddef>
 #include <limits>
 #include <fstream>
 #include <iomanip>

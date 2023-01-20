@@ -22,6 +22,7 @@
 #include <fstream>
 #include <string>
 #include <limits>
+#include <cstddef>
 
 std::string intToString(int balance)
 {
@@ -296,6 +297,7 @@ long double castToDouble(const std::string &input, const int &size)
     int i = 0;
     long double number = 0;
     int base = 10;
+    unsigned short precision = 0;
 
     while (i < size && !(input[i] == '.' || input[i] == ',') && input[i] != '\0')
     {
@@ -304,10 +306,11 @@ long double castToDouble(const std::string &input, const int &size)
 
     ++i;
 
-    while (i < size && input[i] != '\0')
+    while (i < size && input[i] != '\0' && precision <= 2)
     {
         number = number + ((long double)(input[i++] - '0') / base);
         base *= 10;
+        ++precision;
     }
     return number;
 }

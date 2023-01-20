@@ -22,6 +22,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <cstddef>
 #include <limits>
 
 static void registerNewUser(void)
