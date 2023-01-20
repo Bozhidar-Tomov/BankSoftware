@@ -1,17 +1,16 @@
-
 # Bank Software
 
 Course Project № 9
 
 Course - *Introduction to programming*, Winter Semester 2022, Year 1
 
-## Introduction
+## 📘 Introduction
 
-Program simulating a set of basic functionalities in a bank.
+Program simulating a set of basic bank functionalities.
 
 ### Features
 
-Initial functionalities
+Initial options
 
 * **L** -  Login to the system
 * **R** -  Register new user
@@ -43,12 +42,12 @@ Password should consist of at least:
 * 1 lowercase letter
 * 1 uppercase letter
 * 1 symbol - `! @ # $ % ^ & *`
-* minimum length - **5**
-* maximum length - **20**
+* minimum length - 5
+* maximum length - 20
 
 ## ⚠️ Build And Run the program
 
-First, ake sure you have GCC Compiler installed on your machine by running this command:
+First, make sure you have GCC Compiler installed on your machine by running this command:
 
 ```bash
 g++ --version
@@ -64,7 +63,7 @@ An executable file `program.exe` should be created in the same directory.
 
 **Note:** If there is any problem building the project, you could run the pre-built executable in this repository.
 
-## Compatibility
+## ✔️ Compatibility
 
 The software is cross-platform, not invoking any OS-specific functionalities.
 
@@ -73,6 +72,8 @@ The software is tested and guaranteed to run on:
 * **OS:** Windows 10 64-bit, version 22H2
 * **Compiler:** MINGW64 GCC version: (Rev4, Built by MSYS2 project) 12.2.0
 
-### License
+## 📝 License
 
-The MIT License ([MIT](https://choosealicense.com/licenses/mit/)) 2023 - Bozhidar Tomov - student Year 1, Semester 1, FMI, Sofia.
+The MIT License ([MIT](https://choosealicense.com/licenses/mit/)) 2023 - Bozhidar Tomov.
+
+Year 1, Winter Semester, Faculty of Mathematics and Informatics of Sofia University, Sofia.

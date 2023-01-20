@@ -107,7 +107,7 @@ static void transfer(User &user)
 
     if (receiverName == user.name)
     {
-        std::cout << "Invalid Receiver! Task terminated." << std::endl;
+        std::cout << "\033[31mError:\033[0m Invalid Receiver! Task terminated." << std::endl;
         return;
     }
 
