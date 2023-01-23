@@ -1,8 +1,12 @@
+![Logo](https://i.postimg.cc/HWh39c0Z/logo.png)
+
 # Bank Software
 
 Course Project № 9
 
 Course - *Introduction to programming*, Winter Semester 2022, Year 1
+
+![Grade](https://img.shields.io/badge/Grade-not%20graded%20yet-blue.svg)
 
 ## 📘 Introduction
 
