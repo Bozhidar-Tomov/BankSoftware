@@ -48,7 +48,7 @@ bool User::UpdateBalance(const long &balance, const char &type)
         if (this->balance > constantsAccount::MAX_BALANCE)
         {
             this->balance = temp;
-            std::cout << "Balance max limit of 1,000,000,000.00 exceeded! Task terminated.\n"
+            std::cout << "Balance max limit of 10,000,000.00 exceeded! Task terminated.\n"
                       << std::endl;
             return false;
         }
