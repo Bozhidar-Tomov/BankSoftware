@@ -6,7 +6,7 @@ Course Project № 9
 
 Course - *Introduction to programming*, Winter Semester 2022, Year 1
 
-![Grade](https://img.shields.io/badge/Grade-6%20out20%of20%6-blue.svg)
+![Grade](https://img.shields.io/badge/Grade-6%20out%20of%206-blue.svg)
 
 ## 📘 Introduction
 
